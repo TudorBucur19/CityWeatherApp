@@ -4,12 +4,11 @@ import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import type { ICityCard } from "../types";
-import { useState, type FC } from "react";
 import { Button } from "@mui/material";
 import GenericModal from "./GenericModal";
 import CityForm from "./CityForm";
 import { useAppContext } from "../Context/AppStateContext";
-import { set } from "zod";
+import type { FC } from "react";
 
 const styles = {
   cardItemContainer: {
@@ -21,12 +20,28 @@ const styles = {
 };
 
 const CityCard: FC<ICityCard> = ({ city }) => {
-  const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =
-    useAppContext();
+  const { isModalOpen, setIsModalOpen, setIsEditMode } = useAppContext();
   const onEditClick = () => {
     setIsModalOpen(true);
     setIsEditMode(true);
   };
+
+  const modalCloseHandler = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+  };
+
+  const handleDeleteCity = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/cities/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete city");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const {
     id,
     name,
@@ -40,7 +55,7 @@ const CityCard: FC<ICityCard> = ({ city }) => {
   return (
     <>
       <Card variant="outlined" sx={styles.cardItemContainer}>
-        <CardHeader title={name} />
+        <CardHeader title={name + id} />
         <CardContent>
           <Typography variant="body1">State: {state}</Typography>
           <Typography variant="body1">Country: {country}</Typography>
@@ -56,14 +71,18 @@ const CityCard: FC<ICityCard> = ({ city }) => {
           <Button size="small" onClick={onEditClick}>
             Edit
           </Button>
-          <Button size="small" color="error">
+          <Button
+            size="small"
+            color="error"
+            onClick={() => handleDeleteCity(id)}
+          >
             Delete
           </Button>
         </CardActions>
       </Card>
       <GenericModal
         open={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
+        handleClose={modalCloseHandler}
         title="City Details"
       >
         <CityForm city={city} />

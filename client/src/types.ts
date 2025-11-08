@@ -1,19 +1,45 @@
-export interface City {
-  id: string;
+export interface CityPayload {
   name: string;
-  state?: string | null;
+  state: string;
   country: string;
   tourist_rating: number;
-  date_established?: string;
-  estimated_population?: number;
+  date_established: string;
+  estimated_population: number;
+}
+
+export interface CityDB extends CityPayload {
+  id: string;
+}
+
+export interface EditCityPayload {
+  id: string;
+  tourist_rating: number;
+  date_established: string;
+  estimated_population: number;
+}
+
+export type FieldNameOptions =
+  | "name"
+  | "state"
+  | "country"
+  | "date_established"
+  | "estimated_population";
+
+export interface CityTextFormFields {
+  label: string;
+  type: string;
+  name: FieldNameOptions;
+  fullWidth: boolean;
+  required: boolean;
+  display: boolean;
 }
 
 export interface ICityCard {
-  city: City;
+  city: CityDB;
 }
 
 export interface ICityList {
-  allCities: City[];
+  allCities: CityDB[];
 }
 
 export interface IGenericModal {
@@ -36,4 +62,8 @@ export interface ICustomInput {
   name: string;
   fullWidth?: boolean;
   display?: boolean;
+}
+
+export interface ICItyForm {
+  city: CityDB;
 }

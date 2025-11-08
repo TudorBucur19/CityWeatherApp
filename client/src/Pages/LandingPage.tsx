@@ -3,10 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { mockCities } from "../mockData";
 import CityList from "../Components/CityList";
 import SearchBar from "../Components/SearchBar";
+import { useEffect, useState } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const allCities = mockCities;
+  const [allCities, setAllCities] = useState([]);
+  // const allCities = mockCities;
+
+  const fetchApi = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/cities");
+      const data = await response.json();
+      console.log(data);
+      setAllCities(data);
+    } catch (error) {
+      console.error("Error fetching API:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, []);
 
   return (
     <Container>

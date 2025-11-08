@@ -2,7 +2,7 @@ export const mockCities = [
   {
     id: "122",
     name: "Paris",
-    state: null,
+    state: "PA",
     country: "France",
     tourist_rating: 5,
     date_established: "0520-01-01",
@@ -11,7 +11,7 @@ export const mockCities = [
   {
     id: "123",
     name: "Tokyo",
-    state: null,
+    state: "TK",
     country: "Japan",
     tourist_rating: 5,
     date_established: "1457-03-15",

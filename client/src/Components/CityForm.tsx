@@ -11,18 +11,19 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useAppContext } from "../Context/AppStateContext";
 
-import type { ICityCard } from "../types";
-import { useEffect } from "react";
+import type {
+  CityPayload,
+  CityTextFormFields,
+  EditCityPayload,
+  ICItyForm,
+} from "../types";
+import { useEffect, type FC } from "react";
+import { cityFormFields } from "../Constants/formConstants";
+import { useNavigate } from "react-router-dom";
 
-type Props = {
-  apiBaseUrl?: string;
-  onCreated?: (city: any) => void;
-  city?: ICityCard["city"];
-};
-
-const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
-  const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =
-    useAppContext();
+const CityForm: FC<ICItyForm> = ({ city }) => {
+  const { setIsModalOpen, isEditMode, setIsEditMode } = useAppContext();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -35,9 +36,9 @@ const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
       name: city?.name || "",
       state: city?.state || "",
       country: city?.country || "",
-      touristRating: city?.tourist_rating ?? 3,
-      dateEstablished: city?.date_established || "",
-      estimatedPopulation: city?.estimated_population?.toString() || "",
+      tourist_rating: city?.tourist_rating ?? 3,
+      date_established: city?.date_established || "",
+      estimated_population: city?.estimated_population || 0,
     },
   });
 
@@ -47,44 +48,68 @@ const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
       setValue("name", city.name || "");
       setValue("state", city.state || "");
       setValue("country", city.country || "");
-      setValue("touristRating", city.tourist_rating ?? 3);
-      setValue("dateEstablished", city.date_established || "");
-      setValue(
-        "estimatedPopulation",
-        city.estimated_population?.toString() || ""
-      );
+      setValue("tourist_rating", city.tourist_rating ?? 3);
+      setValue("date_established", city.date_established || "");
+      setValue("estimated_population", city.estimated_population || 0);
     }
   }, [city, setValue]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: CityPayload) => {
+    console.log("DATA FOR PAYLOAD", data);
+    const payload = {
+      name: data.name,
+      state: data.state.trim() === "" ? "" : data.state,
+      country: data.country,
+      tourist_rating: data.tourist_rating ?? 1,
+      date_established: data.date_established || "",
+      estimated_population: data.estimated_population,
+    };
+
+    console.log("PAYLOAD", payload);
+
     try {
-      const payload = {
-        name: data.name,
-        state: data.state.trim() === "" ? null : data.state,
-        country: data.country,
-        tourist_rating: data.touristRating ?? 0,
-        date_established: data.dateEstablished || undefined,
-        estimated_population:
-          data.estimatedPopulation.trim() === ""
-            ? undefined
-            : Number(data.estimatedPopulation),
-      };
+      const response = await fetch("http://localhost:8080/cities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Failed to add city");
+      const newCity = await response.json();
+      console.log("CITY API RESPONSE", newCity);
 
-      console.log("PAYLOAD", payload);
-
-      // const r = await fetch(`${apiBaseUrl}/cities`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(payload),
-      // });
-
-      // const result = await r.json();
-      // if (!r.ok) throw new Error(result?.message || "Failed to create");
-
-      // onCreated?.(result);
-      // reset();
+      // Optionally update city list or close modal here
     } catch (err) {
       console.error(err);
+      // Optionally show error to user
+    } finally {
+      navigate("/");
+    }
+  };
+
+  const onEditSubmit = async (data: EditCityPayload) => {
+    if (!data.id) return; // Ensure city has an id
+    const payload = {
+      estimated_population: data.estimated_population,
+      date_established: data.date_established,
+      tourist_rating: data.tourist_rating,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/cities/${data.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Failed to update city");
+      const updatedCity = await response.json();
+      console.log("CITY API RESPONSE", updatedCity);
+      // Optionally update city list or close modal here
+    } catch (err) {
+      console.error(err);
+      // Optionally show error to user
+    } finally {
+      setIsModalOpen(false);
+      setIsEditMode(false);
     }
   };
 
@@ -100,33 +125,45 @@ const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
       gap: "1rem",
     },
   };
+
+  const formSubmitHandler =
+    isEditMode && city
+      ? handleSubmit((data) => onEditSubmit({ ...data, id: city.id }))
+      : handleSubmit(onSubmit);
+  const onCancel = () => {
+    setIsEditMode(false);
+    setIsModalOpen(false);
+  };
+
+  const cancelHandler = () => {
+    if (isEditMode) {
+      onCancel();
+    } else {
+      reset();
+    }
+  };
+  const formTitle = isEditMode ? "Edit City" : "Add City";
+  const formDescription = isEditMode
+    ? "Update the city details below."
+    : "Fill in the details to add a new city.";
+  const submitBtnText = isEditMode ? "Update City" : "Add City";
+  const cancelBtnText = isEditMode ? "Cancel" : "Reset";
   return (
     <Card variant="outlined">
-      <CardHeader title="Add City" />
+      <CardHeader title={formTitle} subheader={formDescription} />
       <CardContent>
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={styles.formContainer}
-        >
-          <TextField
-            label="City Name"
-            fullWidth
-            {...register("name", { required: true })}
-          />
-
-          <TextField
-            label="State / Sub-region"
-            fullWidth
-            {...register("state")}
-          />
-
-          <TextField
-            label="Country"
-            fullWidth
-            {...register("country", { required: true })}
-          />
-
+        <Box component="form" sx={styles.formContainer}>
+          {cityFormFields(!isEditMode).map((field: CityTextFormFields) => (
+            <TextField
+              key={field.name}
+              label={field.label}
+              type={field.type}
+              fullWidth={field.fullWidth}
+              required={field.required}
+              {...register(field.name)}
+              sx={{ display: field.display ? "block" : "none" }}
+            />
+          ))}
           <Stack
             direction="row"
             alignItems="center"
@@ -135,7 +172,7 @@ const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
           >
             <Typography sx={{ minWidth: 80 }}>Rating</Typography>
             <Controller
-              name="touristRating"
+              name="tourist_rating"
               control={control}
               render={({ field }) => (
                 <Rating
@@ -149,30 +186,21 @@ const CityForm = ({ apiBaseUrl = "/api", onCreated, city }: Props) => {
             />
           </Stack>
 
-          <TextField
-            label="Date Established"
-            type="date"
-            fullWidth
-            {...register("dateEstablished")}
-          />
-
-          <TextField
-            label="Estimated Population"
-            type="number"
-            fullWidth
-            {...register("estimatedPopulation")}
-          />
-
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button
               variant="outlined"
-              onClick={() => reset()}
+              onClick={cancelHandler}
               disabled={isSubmitting}
             >
-              Reset
+              {cancelBtnText}
             </Button>
-            <Button type="submit" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? "Saving…" : "Save City"}
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              onClick={formSubmitHandler}
+            >
+              {submitBtnText}
             </Button>
           </Stack>
         </Box>
