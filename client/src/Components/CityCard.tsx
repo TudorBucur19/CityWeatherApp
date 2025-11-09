@@ -3,15 +3,17 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
-import type { ICityCard } from "../types";
-import { Button } from "@mui/material";
+import type { ICityCard } from "../types/components";
+import { Button, Rating, Stack } from "@mui/material";
 import GenericModal from "./GenericModal";
 import CityForm from "./CityForm";
 import { useAppContext } from "../Context/AppStateContext";
 import type { FC } from "react";
+import CityDetailsCard from "./CityDetailsCard";
 
 const styles = {
   cardItemContainer: {
+    cursor: "pointer",
     transition: "transform 180ms, box-shadow 180ms",
     "&:hover": {
       transform: "translateY(-8px)",
@@ -20,7 +22,8 @@ const styles = {
 };
 
 const CityCard: FC<ICityCard> = ({ city }) => {
-  const { isModalOpen, setIsModalOpen, setIsEditMode } = useAppContext();
+  const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =
+    useAppContext();
   const onEditClick = () => {
     setIsModalOpen(true);
     setIsEditMode(true);
@@ -54,12 +57,29 @@ const CityCard: FC<ICityCard> = ({ city }) => {
 
   return (
     <>
-      <Card variant="outlined" sx={styles.cardItemContainer}>
-        <CardHeader title={name + id} />
+      <Card
+        variant="outlined"
+        sx={styles.cardItemContainer}
+        onClick={() => setIsModalOpen(true)}
+      >
+        <CardHeader title={name} />
         <CardContent>
           <Typography variant="body1">State: {state}</Typography>
           <Typography variant="body1">Country: {country}</Typography>
-          <Typography variant="body1">Rating: {tourist_rating}/5</Typography>
+          <Typography variant="body1">Tourists reviews:</Typography>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Rating
+              name="read-only"
+              value={tourist_rating}
+              max={5}
+              precision={1}
+              readOnly
+              size="small"
+            />
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              ({tourist_rating}/5)
+            </Typography>
+          </Stack>
           <Typography variant="body1">
             Established: {date_established}
           </Typography>
@@ -68,13 +88,22 @@ const CityCard: FC<ICityCard> = ({ city }) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={onEditClick}>
+          <Button
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditClick();
+            }}
+          >
             Edit
           </Button>
           <Button
             size="small"
             color="error"
-            onClick={() => handleDeleteCity(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteCity(id);
+            }}
           >
             Delete
           </Button>
@@ -85,7 +114,11 @@ const CityCard: FC<ICityCard> = ({ city }) => {
         handleClose={modalCloseHandler}
         title="City Details"
       >
-        <CityForm city={city} />
+        {isEditMode ? (
+          <CityForm city={city} />
+        ) : (
+          <CityDetailsCard city={city} />
+        )}
       </GenericModal>
     </>
   );

@@ -1,4 +1,6 @@
-export const mockCities = [
+import type { CityDBDetails } from "./types/cityTypes";
+
+export const mockCitiesSimple = [
   {
     id: "122",
     name: "Paris",
@@ -43,5 +45,72 @@ export const mockCities = [
     tourist_rating: 5,
     date_established: "1565-03-01",
     estimated_population: 6748000,
+  },
+];
+
+export const mockCities: CityDBDetails[] = [
+  {
+    id: "1",
+    name: "Paris",
+    state: "Île-de-France",
+    country: "France",
+    tourist_rating: 3,
+    date_established: "300 BC",
+    estimated_population: 2148000,
+    coordinates: { latitude: 48.8566, longitude: 2.3522 },
+    countryInfo: { name: "France", twoDigitCode: "FR", threeDigitCode: "FRA" },
+    weatherInfo: {
+      feels_like: 12.5,
+      humidity: 70,
+      pressure: 1012,
+      temp: 13.2,
+      temp_max: 15,
+      temp_min: 10,
+      description: "Cloudy",
+    },
+  },
+  {
+    id: "2",
+    name: "Tokyo",
+    state: "Tokyo",
+    country: "Japan",
+    tourist_rating: 4,
+    date_established: "1603",
+    estimated_population: 13960000,
+    coordinates: { latitude: 35.6895, longitude: 139.6917 },
+    countryInfo: { name: "Japan", twoDigitCode: "JP", threeDigitCode: "JPN" },
+    weatherInfo: {
+      feels_like: 18.3,
+      humidity: 60,
+      pressure: 1015,
+      temp: 19.0,
+      temp_max: 21,
+      temp_min: 16,
+      description: "Sunny",
+    },
+  },
+  {
+    id: "3",
+    name: "New York",
+    state: "New York",
+    country: "United States",
+    tourist_rating: 5,
+    date_established: "1624",
+    estimated_population: 8419000,
+    coordinates: { latitude: 40.7128, longitude: -74.006 },
+    countryInfo: {
+      name: "United States",
+      twoDigitCode: "US",
+      threeDigitCode: "USA",
+    },
+    weatherInfo: {
+      feels_like: 7.8,
+      humidity: 55,
+      pressure: 1020,
+      temp: 8.5,
+      temp_max: 10,
+      temp_min: 6,
+      description: "Clear",
+    },
   },
 ];

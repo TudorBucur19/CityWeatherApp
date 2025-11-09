@@ -1,5 +1,5 @@
 import { Box, IconButton, Modal, Typography } from "@mui/material";
-import type { IGenericModal } from "../types";
+import type { IGenericModal } from "../types/components";
 import type { FC } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 const styles = {

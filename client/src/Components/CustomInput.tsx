@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import type { ICustomInput } from "../types";
+import type { ICustomInput } from "../types/components";
 import type { FC } from "react";
 
 const CustomInput: FC<ICustomInput> = ({

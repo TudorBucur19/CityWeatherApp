@@ -10,16 +10,15 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useAppContext } from "../Context/AppStateContext";
-
+import { useEffect, type FC } from "react";
+import { cityFormFields } from "../Constants/formConstants";
+import { useNavigate } from "react-router-dom";
+import type { ICItyForm } from "../types/components";
 import type {
   CityPayload,
   CityTextFormFields,
   EditCityPayload,
-  ICItyForm,
-} from "../types";
-import { useEffect, type FC } from "react";
-import { cityFormFields } from "../Constants/formConstants";
-import { useNavigate } from "react-router-dom";
+} from "../types/cityTypes";
 
 const CityForm: FC<ICItyForm> = ({ city }) => {
   const { setIsModalOpen, isEditMode, setIsEditMode } = useAppContext();
@@ -144,7 +143,7 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
   };
   const formTitle = isEditMode ? "Edit City" : "Add City";
   const formDescription = isEditMode
-    ? "Update the city details below."
+    ? `Update ${city?.name} details below.`
     : "Fill in the details to add a new city.";
   const submitBtnText = isEditMode ? "Update City" : "Add City";
   const cancelBtnText = isEditMode ? "Cancel" : "Reset";

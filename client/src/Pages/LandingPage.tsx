@@ -1,29 +1,29 @@
 import { Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { mockCities } from "../mockData";
 import CityList from "../Components/CityList";
 import SearchBar from "../Components/SearchBar";
-import { useEffect, useState } from "react";
+import { useAppContext } from "../Context/AppStateContext";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [allCities, setAllCities] = useState([]);
+  // const [allCities, setAllCities] = useState([]);
+  const { searchCityResult } = useAppContext();
   // const allCities = mockCities;
 
-  const fetchApi = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/cities");
-      const data = await response.json();
-      console.log(data);
-      setAllCities(data);
-    } catch (error) {
-      console.error("Error fetching API:", error);
-    }
-  };
+  // const fetchApi = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:8080/cities");
+  //     const data = await response.json();
+  //     console.log(data);
+  //     setAllCities(data);
+  //   } catch (error) {
+  //     console.error("Error fetching API:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchApi();
-  }, []);
+  // useEffect(() => {
+  //   fetchApi();
+  // }, []);
 
   return (
     <Container>
@@ -36,7 +36,7 @@ const LandingPage = () => {
       >
         Add New City
       </Button>
-      <CityList allCities={allCities} />
+      <CityList allCities={searchCityResult} />
     </Container>
   );
 };

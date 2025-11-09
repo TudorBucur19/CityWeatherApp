@@ -1,4 +1,4 @@
-import type { CityTextFormFields, FieldNameOptions } from "../types";
+import type { CityTextFormFields, FieldNameOptions } from "../types/components";
 
 export const cityFormFields = (
   shouldDisplay: boolean

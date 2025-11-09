@@ -5,7 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const db_1 = __importDefault(require("./db"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const cities_1 = require("./routes/cities");
+const countries_1 = require("./routes/countries");
+const weather_1 = require("./routes/weather");
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 const origins = "http://localhost:5173"
@@ -29,71 +33,9 @@ const corsOptions = {
     maxAge: 600, // cache preflight for 10 minutes
 };
 app.use((0, cors_1.default)(corsOptions));
-// Get all cities from the database
-app.get("/cities", async (req, res) => {
-    try {
-        const cities = await (0, db_1.default)("cities").select();
-        res.json(cities);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to fetch cities" });
-    }
-});
-// Add a city to the database
-app.post("/cities", async (req, res) => {
-    try {
-        const { name, state, country, tourist_rating, date_established, estimated_population, } = req.body;
-        if (!name || !country) {
-            return res.status(400).json({ error: "Name and country are required" });
-        }
-        const [id] = await (0, db_1.default)("cities").insert({
-            name,
-            state,
-            country,
-            tourist_rating,
-            date_established,
-            estimated_population,
-        });
-        const city = await (0, db_1.default)("cities").where({ id }).first();
-        res.status(201).json(city);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to add city" });
-    }
-});
-// Update a city by ID
-app.patch("/cities/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = req.body;
-        const updated = await (0, db_1.default)("cities").where({ id }).update(updateData);
-        if (!updated) {
-            return res.status(404).json({ error: "City not found" });
-        }
-        const city = await (0, db_1.default)("cities").where({ id }).first();
-        res.json(city);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to update city" });
-    }
-});
-app.delete("/cities/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await (0, db_1.default)("cities").where({ id }).del();
-        if (!deleted) {
-            return res.status(404).json({ error: "City not found" });
-        }
-        res.json({ success: true });
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to delete city" });
-    }
-});
+(0, cities_1.registerCityRoutes)(app);
+(0, countries_1.registerCountryRoutes)(app);
+(0, weather_1.registerWeatherRoutes)(app);
 // typed error handler
 app.use((err, _req, res, _next) => {
     console.error(err);

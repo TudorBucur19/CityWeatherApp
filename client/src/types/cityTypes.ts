@@ -34,36 +34,29 @@ export interface CityTextFormFields {
   display: boolean;
 }
 
-export interface ICityCard {
-  city: CityDB;
+export interface CityDBDetails extends CityDB {
+  coordinates: CityCoordinates;
+  countryInfo: CountryInfo;
+  weatherInfo: CityWeather;
 }
 
-export interface ICityList {
-  allCities: CityDB[];
-}
-
-export interface IGenericModal {
-  open: boolean;
-  handleClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-}
-
-export type AppState = {
-  isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
-  isEditMode: boolean;
-  setIsEditMode: (isEdit: boolean) => void;
+export type CityCoordinates = {
+  latitude: number;
+  longitude: number;
 };
 
-export interface ICustomInput {
-  label: string;
-  type: string;
+export type CountryInfo = {
   name: string;
-  fullWidth?: boolean;
-  display?: boolean;
-}
+  twoDigitCode: string;
+  threeDigitCode: string;
+};
 
-export interface ICItyForm {
-  city: CityDB;
-}
+export type CityWeather = {
+  feels_like: number;
+  humidity: number;
+  pressure: number;
+  temp: number;
+  temp_max: number;
+  temp_min: number;
+  description: string;
+};
