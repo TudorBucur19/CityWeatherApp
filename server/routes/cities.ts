@@ -79,22 +79,6 @@ export function registerCityRoutes(app: Express) {
     }
   });
 
-  // app.get("/cities/search/:name", async (req: Request, res: Response) => {
-  //   try {
-  //     const { name } = req.params;
-  //     const cities = await db("cities")
-  //       .whereRaw("LOWER(name) LIKE ?", [`%${name.toLowerCase()}%`])
-  //       .select();
-  //     if (!cities) {
-  //       return res.status(404).json({ error: "City not found" });
-  //     }
-  //     res.json(cities);
-  //   } catch (err) {
-  //     console.error(err);
-  //     res.status(500).json({ error: "Failed to search city" });
-  //   }
-  // });
-
   app.get("/cities/search/:name", async (req: Request, res: Response) => {
     try {
       const { name } = req.params;

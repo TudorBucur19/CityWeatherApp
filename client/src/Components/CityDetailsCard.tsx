@@ -175,7 +175,7 @@ const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
                 <LabelValueBox
                   icon={<RemoveRedEyeOutlinedIcon fontSize="small" />}
                   label="Feels Like"
-                  value={`${city.weatherInfo.feels_like}°C`}
+                  value={`${kelvinToCelsius(city.weatherInfo.feels_like)}°C`}
                 />
               </Stack>
               <Stack direction="row" spacing={6} useFlexGap>

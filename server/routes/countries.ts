@@ -8,7 +8,6 @@ export function registerCountryRoutes(app: Express) {
     const url = `https://api.countrylayer.com/v2/name/${encodeURIComponent(
       name
     )}?access_key=${apiKey}&fullText=1`;
-    // const url = `https://www.apicountries.com/name/${name}`;
 
     try {
       const response = await axios.get(url);

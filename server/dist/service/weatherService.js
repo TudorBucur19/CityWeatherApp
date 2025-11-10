@@ -7,13 +7,21 @@ exports.getWeatherData = void 0;
 const axios_1 = __importDefault(require("axios"));
 const getWeatherData = async (latitude, longitude) => {
     try {
-        const apiKey2 = process.env.OPENWEATHER_API_KEY;
-        console.log("APIKEY2", apiKey2);
-        const apiKey = "d3c5e9c2fc79daaeabc009361c0251f3";
+        const apiKey = process.env.OPENWEATHER_API_KEY;
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
         const response = await axios_1.default.get(url);
-        console.log(response);
-        return response.data;
+        const mainWData = response.data.main;
+        const wData = response.data.weather[0];
+        const responseSummary = {
+            feels_like: mainWData.feels_like,
+            humidity: mainWData.humidity,
+            pressure: mainWData.pressure,
+            temp: mainWData.temp,
+            temp_max: mainWData.temp_max,
+            temp_min: mainWData.temp_min,
+            description: wData.description,
+        };
+        return responseSummary;
     }
     catch (err) {
         console.error("Error fetching weather data:", err);

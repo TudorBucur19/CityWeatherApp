@@ -35,3 +35,8 @@ export interface ILabelValueBox {
   value: string | number;
   icon?: React.ReactElement;
 }
+
+export interface IIconLabelRow {
+  icon?: React.ReactElement;
+  children: React.ReactElement;
+}

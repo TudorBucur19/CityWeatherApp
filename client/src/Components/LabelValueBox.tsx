@@ -1,16 +1,7 @@
 import type { FC } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import type { ILabelValueBox } from "../types/components";
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: 0.5,
-    minWidth: 220,
-  },
-};
+import { labelValueBoxStyles as styles } from "../styles/styles";
 
 const LabelValueBox: FC<ILabelValueBox> = ({ label, value, icon }) => {
   return (

@@ -4,22 +4,16 @@ import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import type { ICityCard } from "../types/components";
-import { Button, Rating, Stack } from "@mui/material";
+import { Box, Button, Rating, Stack } from "@mui/material";
 import GenericModal from "./GenericModal";
 import CityForm from "./CityForm";
 import { useAppContext } from "../Context/AppStateContext";
 import type { FC } from "react";
 import CityDetailsCard from "./CityDetailsCard";
 
-const styles = {
-  cardItemContainer: {
-    cursor: "pointer",
-    transition: "transform 180ms, box-shadow 180ms",
-    "&:hover": {
-      transform: "translateY(-8px)",
-    },
-  },
-};
+import { cityCardStyles as styles } from "../styles/styles";
+import { Label } from "@mui/icons-material";
+import LabelValueBox from "./LabelValueBox";
 
 const CityCard: FC<ICityCard> = ({ city }) => {
   const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =

@@ -75,21 +75,6 @@ function registerCityRoutes(app) {
             res.status(500).json({ error: "Failed to delete city" });
         }
     });
-    // app.get("/cities/search/:name", async (req: Request, res: Response) => {
-    //   try {
-    //     const { name } = req.params;
-    //     const cities = await db("cities")
-    //       .whereRaw("LOWER(name) LIKE ?", [`%${name.toLowerCase()}%`])
-    //       .select();
-    //     if (!cities) {
-    //       return res.status(404).json({ error: "City not found" });
-    //     }
-    //     res.json(cities);
-    //   } catch (err) {
-    //     console.error(err);
-    //     res.status(500).json({ error: "Failed to search city" });
-    //   }
-    // });
     app.get("/cities/search/:name", async (req, res) => {
         try {
             const { name } = req.params;
@@ -149,11 +134,9 @@ function registerCityRoutes(app) {
                 // Get country info
                 const countryInfo = await (0, countryService_1.getCountryData)(city.country);
                 // Get weather info (if coordinates found)
-                console.log("COORD", latitude ?? "lat", longitude ?? "long");
                 let weatherInfo = null;
                 if (latitude && longitude) {
                     const weatherRes = await (0, weatherService_1.getWeatherData)(latitude, longitude);
-                    console.log("WR", weatherRes);
                     weatherInfo = weatherRes;
                 }
                 return {

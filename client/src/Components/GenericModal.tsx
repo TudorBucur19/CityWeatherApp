@@ -2,18 +2,7 @@ import { Box, IconButton, Modal, Typography } from "@mui/material";
 import type { IGenericModal } from "../types/components";
 import type { FC } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-const styles = {
-  modalContainer: {
-    position: "relative",
-    maxWidth: 600,
-    margin: "auto",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 42,
-    right: 16,
-  },
-};
+import { genericModalStyles as styles } from "../styles/styles";
 
 const GenericModal: FC<IGenericModal> = ({
   open,

@@ -20,6 +20,8 @@ import type {
   EditCityPayload,
 } from "../types/cityTypes";
 
+import { cityFormStyles as styles } from "../styles/styles";
+
 const CityForm: FC<ICItyForm> = ({ city }) => {
   const { setIsModalOpen, isEditMode, setIsEditMode } = useAppContext();
   const navigate = useNavigate();
@@ -110,19 +112,6 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
       setIsModalOpen(false);
       setIsEditMode(false);
     }
-  };
-
-  const styles = {
-    container: {
-      maxWidth: 900,
-      margin: "0 auto",
-      padding: "1rem",
-    },
-    formContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "1rem",
-    },
   };
 
   const formSubmitHandler =

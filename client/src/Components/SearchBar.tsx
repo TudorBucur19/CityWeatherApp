@@ -3,6 +3,7 @@ import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAppContext } from "../Context/AppStateContext";
 import { mockCities } from "../mockData";
+import { searchBarStyles as styles } from "../styles/styles";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,12 +22,6 @@ const SearchBar = () => {
       console.error("Error searching city:", err);
       setSearchCityResult([]);
     }
-  };
-
-  const styles = {
-    searchBtn: {
-      cursor: "pointer",
-    },
   };
 
   return (
