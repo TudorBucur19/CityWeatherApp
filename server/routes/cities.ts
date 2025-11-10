@@ -18,8 +18,6 @@ export function registerCityRoutes(app: Express) {
 
   // Add a city to the database
   app.post("/cities", async (req: Request, res: Response) => {
-    console.log("REQUEST", req);
-
     try {
       const {
         name,
