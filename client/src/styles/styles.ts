@@ -1,11 +1,21 @@
+// export const cityCardStyles = {
+//   cardItemContainer: {
+//     cursor: "pointer",
+//     transition: "transform 180ms, box-shadow 180ms",
+//     "&:hover": {
+//       transform: "translateY(-8px)",
+//     },
+//   },
+// };
 export const cityCardStyles = {
-  cardItemContainer: {
-    cursor: "pointer",
-    transition: "transform 180ms, box-shadow 180ms",
-    "&:hover": {
-      transform: "translateY(-8px)",
-    },
-  },
+  card: { width: 300, borderRadius: 2 },
+  cardContent: { cursor: "pointer" },
+  headerStack: { mb: 1 },
+  name: { fontWeight: 700 },
+  subheader: { color: "text.secondary", mb: 2, textAlign: "left" },
+  divider: { my: 1.5 },
+  ratingText: { color: "text.secondary" },
+  actions: { px: 2, pb: 2, pt: 0, justifyContent: "flex-end" },
 };
 
 export const cityFormStyles = {
@@ -35,10 +45,15 @@ export const cityListStyles = {
 };
 
 export const genericModalStyles = {
+  modalHeader: {
+    // position: "absolute",
+    // top: 42,
+    // right: 16
+  },
   modalContainer: {
     position: "relative",
     maxWidth: 600,
-    margin: "auto",
+    margin: "2rem auto",
   },
   closeButton: {
     position: "absolute",
@@ -61,4 +76,54 @@ export const searchBarStyles = {
   searchBtn: {
     cursor: "pointer",
   },
+};
+
+export const cityDetailsCardStyles = {
+  paper: {
+    maxWidth: 900,
+    width: "100%",
+    m: "0 auto",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  headerBox: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    px: 3,
+    pt: 2,
+  },
+  headerStack: { py: 1 },
+  headerIcon: { fontSize: 20 },
+  headerText: { color: "text.secondary" },
+  divider: {},
+  contentBox: {
+    p: 3,
+    bgcolor: "background.default",
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
+  card: { borderRadius: 2 },
+  cardHeader: { "& .MuiCardHeader-avatar": { color: "text.secondary" } },
+  aboutTitle: { fontWeight: 700 },
+  labelValueBox: {
+    display: "flex",
+    flexWrap: "wrap",
+    rowGap: 2,
+    columnGap: 6,
+    "& > *": { minWidth: { xs: "100%", sm: 240 } },
+  },
+  ratingCaption: { color: "text.secondary" },
+  ratingText: { color: "text.secondary" },
+  weatherConditionsBox: {
+    mt: 2,
+    p: 2,
+    borderRadius: 1,
+    border: "1px solid",
+    borderColor: "divider",
+    backgroundColor: "#ebf3ff",
+  },
+  weatherConditionsTitle: { color: "text.secondary", mb: 0.5 },
+  footerStack: { justifyContent: "flex-end", pt: 1 },
 };

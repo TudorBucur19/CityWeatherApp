@@ -58,5 +58,6 @@ export type CityWeather = {
   temp: number;
   temp_max: number;
   temp_min: number;
+  windSpeed: number;
   description: string;
 };
