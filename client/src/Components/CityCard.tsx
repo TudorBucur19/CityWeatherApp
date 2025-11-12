@@ -22,34 +22,15 @@ import CityDetailsCard from "./CityDetailsCard";
 import IconLabelRow from "./IconLabelRow";
 
 import { cityCardStyles as styles } from "../styles/styles";
+import { handleDeleteCity } from "../service/databaseOperations";
 
 const CityCard: FC<ICityCard> = ({ city }) => {
-  const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =
+  const { isModalOpen, isEditMode, onEditClick, modalCloseHandler } =
     useAppContext();
   const navigate = useNavigate();
-  const onEditClick = () => {
-    setIsModalOpen(true);
-    setIsEditMode(true);
-  };
-
-  const modalCloseHandler = () => {
-    setIsModalOpen(false);
-    setIsEditMode(false);
-  };
 
   const navigateToDetailsPage = () => {
     navigate(`/city/${city.id}`);
-  };
-
-  const handleDeleteCity = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:8080/cities/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Failed to delete city");
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   const {

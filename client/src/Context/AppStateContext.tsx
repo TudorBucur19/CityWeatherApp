@@ -9,6 +9,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [searchCityResult, setSearchCityResult] = useState<CityDBDetails[]>([]);
+  const [searchTriggered, setSearchTriggered] = useState(false);
+
+  const modalCloseHandler = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+  };
+
+  const backButtonHandler = () => {
+    globalThis.history.back();
+  };
+
+  const onEditClick = () => {
+    setIsModalOpen(true);
+    setIsEditMode(true);
+  };
 
   const returnValues = useMemo(
     () => ({
@@ -18,15 +33,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setIsEditMode,
       searchCityResult,
       setSearchCityResult,
+      modalCloseHandler,
+      backButtonHandler,
+      onEditClick,
+      searchTriggered,
+      setSearchTriggered,
     }),
-    [
-      isModalOpen,
-      setIsModalOpen,
-      isEditMode,
-      setIsEditMode,
-      searchCityResult,
-      setSearchCityResult,
-    ]
+    [isModalOpen, isEditMode, searchCityResult, searchTriggered]
   );
 
   return (

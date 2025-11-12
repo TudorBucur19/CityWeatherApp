@@ -1,5 +1,7 @@
 // SimpleAddCityForm.tsx
+import { useEffect, type FC } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -9,21 +11,25 @@ import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import AddIcon from "@mui/icons-material/Add";
+
 import { useAppContext } from "../Context/AppStateContext";
-import { useEffect, type FC } from "react";
 import { cityFormFields } from "../Constants/formConstants";
-import { useNavigate } from "react-router-dom";
 import type { ICItyForm } from "../types/components";
-import type {
-  CityPayload,
-  CityTextFormFields,
-  EditCityPayload,
-} from "../types/cityTypes";
+import type { CityTextFormFields } from "../types/cityTypes";
+import { addNewCityToDB, editCityHandler } from "../service/databaseOperations";
 
 import { cityFormStyles as styles } from "../styles/styles";
 
 const CityForm: FC<ICItyForm> = ({ city }) => {
-  const { setIsModalOpen, isEditMode, setIsEditMode } = useAppContext();
+  const {
+    setIsModalOpen,
+    isEditMode,
+    setIsEditMode,
+    backButtonHandler,
+    modalCloseHandler,
+  } = useAppContext();
   const navigate = useNavigate();
   const {
     register,
@@ -55,69 +61,12 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
     }
   }, [city, setValue]);
 
-  const onSubmit = async (data: CityPayload) => {
-    console.log("DATA FOR PAYLOAD", data);
-    const payload = {
-      name: data.name,
-      state: data.state.trim() === "" ? "" : data.state,
-      country: data.country,
-      tourist_rating: data.tourist_rating ?? 1,
-      date_established: data.date_established || "",
-      estimated_population: data.estimated_population,
-    };
-
-    console.log("PAYLOAD", payload);
-
-    try {
-      const response = await fetch("http://localhost:8080/cities", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) throw new Error("Failed to add city");
-      const newCity = await response.json();
-      console.log("CITY API RESPONSE", newCity);
-
-      // Optionally update city list or close modal here
-    } catch (err) {
-      console.error(err);
-      // Optionally show error to user
-    } finally {
-      navigate("/");
-    }
-  };
-
-  const onEditSubmit = async (data: EditCityPayload) => {
-    if (!data.id) return; // Ensure city has an id
-    const payload = {
-      estimated_population: data.estimated_population,
-      date_established: data.date_established,
-      tourist_rating: data.tourist_rating,
-    };
-
-    try {
-      const response = await fetch(`http://localhost:8080/cities/${data.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) throw new Error("Failed to update city");
-      const updatedCity = await response.json();
-      console.log("CITY API RESPONSE", updatedCity);
-      // Optionally update city list or close modal here
-    } catch (err) {
-      console.error(err);
-      // Optionally show error to user
-    } finally {
-      setIsModalOpen(false);
-      setIsEditMode(false);
-    }
-  };
-
   const formSubmitHandler =
     isEditMode && city
-      ? handleSubmit((data) => onEditSubmit({ ...data, id: city.id }))
-      : handleSubmit(onSubmit);
+      ? handleSubmit((data) =>
+          editCityHandler({ ...data, id: city.id }, modalCloseHandler)
+        )
+      : handleSubmit((data) => addNewCityToDB(data, () => navigate("/")));
   const onCancel = () => {
     setIsEditMode(false);
     setIsModalOpen(false);
@@ -149,6 +98,9 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
               fullWidth={field.fullWidth}
               required={field.required}
               {...register(field.name)}
+              {...(field.type === "date"
+                ? { InputLabelProps: { shrink: true } }
+                : {})}
               sx={{ display: field.display ? "block" : "none" }}
             />
           ))}
@@ -174,22 +126,39 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
             />
           </Stack>
 
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button
-              variant="outlined"
-              onClick={cancelHandler}
-              disabled={isSubmitting}
-            >
-              {cancelBtnText}
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={isSubmitting}
-              onClick={formSubmitHandler}
-            >
-              {submitBtnText}
-            </Button>
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent={isEditMode ? "flex-end" : "space-between"}
+          >
+            {!isEditMode && (
+              <Button
+                variant="outlined"
+                onClick={backButtonHandler}
+                disabled={isSubmitting}
+                startIcon={<ArrowBackIosIcon />}
+              >
+                Back
+              </Button>
+            )}
+            <Box sx={styles.formActions.right}>
+              <Button
+                variant="outlined"
+                onClick={cancelHandler}
+                disabled={isSubmitting}
+              >
+                {cancelBtnText}
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isSubmitting}
+                onClick={formSubmitHandler}
+                startIcon={isEditMode ? null : <AddIcon />}
+              >
+                {submitBtnText}
+              </Button>
+            </Box>
           </Stack>
         </Box>
       </CardContent>

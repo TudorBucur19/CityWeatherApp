@@ -10,7 +10,6 @@ function registerCountryRoutes(app) {
         const { name } = req.params;
         const apiKey = process.env.COUNTRIES_API_KEY;
         const url = `https://api.countrylayer.com/v2/name/${encodeURIComponent(name)}?access_key=${apiKey}&fullText=1`;
-        // const url = `https://www.apicountries.com/name/${name}`;
         try {
             const response = await axios_1.default.get(url);
             res.json(response.data);

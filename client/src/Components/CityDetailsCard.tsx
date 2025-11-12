@@ -1,45 +1,43 @@
 import type { FC } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Paper,
-  Rating,
-  Stack,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import OpacityOutlinedIcon from "@mui/icons-material/OpacityOutlined";
 import AirOutlinedIcon from "@mui/icons-material/AirOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+
 import type { ICityDetailsCard } from "../types/components";
 import LabelValueBox from "./LabelValueBox";
 import { kelvinToCelsius } from "../Utils/helperFunctions";
-import { cityDetailsCardStyles as styles } from "../styles/styles";
 import GenericModal from "./GenericModal";
 import CityForm from "./CityForm";
 import { useAppContext } from "../Context/AppStateContext";
 
+import { cityDetailsCardStyles as styles } from "../styles/styles";
+import { handleDeleteCity } from "../service/databaseOperations";
+
 const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
-  const { isModalOpen, setIsModalOpen, isEditMode, setIsEditMode } =
-    useAppContext();
-
-  const onEditClick = () => {
-    setIsModalOpen(true);
-    setIsEditMode(true);
-  };
-
-  const modalCloseHandler = () => {
-    setIsModalOpen(false);
-    setIsEditMode(false);
-  };
+  const {
+    isModalOpen,
+    isEditMode,
+    modalCloseHandler,
+    backButtonHandler,
+    onEditClick,
+  } = useAppContext();
 
   return (
     <>
@@ -52,8 +50,12 @@ const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
             alignItems="center"
             sx={styles.headerStack}
           >
-            <PublicOutlinedIcon sx={styles.headerIcon} />
-            <Typography variant="subtitle1" sx={styles.headerText}>
+            <LocationCityIcon sx={styles.headerIcon} />
+            <Typography
+              variant="subtitle1"
+              fontSize={32}
+              sx={styles.headerText}
+            >
               {city.name}
             </Typography>
           </Stack>
@@ -64,7 +66,7 @@ const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
         <Box sx={styles.contentBox}>
           <Card variant="outlined" sx={styles.card}>
             <CardHeader
-              avatar={<LanguageOutlinedIcon />}
+              avatar={<AnalyticsIcon />}
               title={
                 <Typography variant="h6" sx={styles.aboutTitle}>
                   {`About ${city.name}`}
@@ -107,88 +109,93 @@ const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
           </Card>
 
           {/* Country Details */}
-          <Card variant="outlined" sx={styles.card}>
-            <CardHeader
-              avatar={<PublicOutlinedIcon />}
-              title={
-                <Typography variant="h6" sx={styles.aboutTitle}>
-                  Country Details
-                </Typography>
-              }
-              sx={styles.cardHeader}
-            />
-            <CardContent>
-              <Box sx={styles.labelValueBox}>
-                <LabelValueBox
-                  label="Country Code (2)"
-                  value={city.countryInfo.twoDigitCode}
-                />
-                <LabelValueBox
-                  label="Country Code (3)"
-                  value={city.countryInfo.threeDigitCode}
-                />
-                {/* <LabelValueBox label="Currency" value={city.countryInfo.currency} /> */}
-              </Box>
-            </CardContent>
-          </Card>
-
+          {city.countryInfo && (
+            <Card variant="outlined" sx={styles.card}>
+              <CardHeader
+                avatar={<PublicOutlinedIcon />}
+                title={
+                  <Typography variant="h6" sx={styles.aboutTitle}>
+                    Country Details
+                  </Typography>
+                }
+                sx={styles.cardHeader}
+              />
+              <CardContent>
+                <Box sx={styles.labelValueBox}>
+                  <LabelValueBox
+                    label="Country Code (2)"
+                    value={city.countryInfo.twoDigitCode}
+                  />
+                  <LabelValueBox
+                    label="Country Code (3)"
+                    value={city.countryInfo.threeDigitCode}
+                  />
+                  {/* <LabelValueBox label="Currency" value={city.countryInfo.currency} /> */}
+                </Box>
+              </CardContent>
+            </Card>
+          )}
           {/* Current Weather */}
-          <Card variant="outlined" sx={styles.card}>
-            <CardHeader
-              avatar={<ThermostatIcon />}
-              title={
-                <Typography variant="h6" sx={styles.aboutTitle}>
-                  Current Weather
-                </Typography>
-              }
-              sx={styles.cardHeader}
-            />
-            <CardContent>
-              <Stack
-                direction={{ xs: "column", md: "row" }}
-                spacing={3}
-                useFlexGap
-                flexWrap="wrap"
-              >
-                <Stack direction="row" spacing={6} useFlexGap>
-                  <LabelValueBox
-                    icon={<ThermostatIcon fontSize="small" />}
-                    label="Temperature"
-                    value={`${kelvinToCelsius(city.weatherInfo.temp)}°C`}
-                  />
-                  <LabelValueBox
-                    icon={<RemoveRedEyeOutlinedIcon fontSize="small" />}
-                    label="Feels Like"
-                    value={`${kelvinToCelsius(city.weatherInfo.feels_like)}°C`}
-                  />
-                </Stack>
-                <Stack direction="row" spacing={6} useFlexGap>
-                  <LabelValueBox
-                    icon={<OpacityOutlinedIcon fontSize="small" />}
-                    label="Humidity"
-                    value={`${city.weatherInfo.humidity}%`}
-                  />
-                  <LabelValueBox
-                    icon={<AirOutlinedIcon fontSize="small" />}
-                    label="Wind Speed"
-                    value={`${city.weatherInfo.windSpeed} m/s`}
-                  />
-                </Stack>
-              </Stack>
-
-              <Box sx={styles.weatherConditionsBox}>
-                <Typography
-                  variant="subtitle2"
-                  sx={styles.weatherConditionsTitle}
+          {city.weatherInfo && (
+            <Card variant="outlined" sx={styles.card}>
+              <CardHeader
+                avatar={<ThermostatIcon />}
+                title={
+                  <Typography variant="h6" sx={styles.aboutTitle}>
+                    Current Weather
+                  </Typography>
+                }
+                sx={styles.cardHeader}
+              />
+              <CardContent>
+                <Stack
+                  direction={{ xs: "column", md: "row" }}
+                  spacing={3}
+                  useFlexGap
+                  flexWrap="wrap"
                 >
-                  Summary weather conditions
-                </Typography>
-                <Typography variant="body2">
-                  {city.weatherInfo.description}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
+                  <Stack direction="row" spacing={6} useFlexGap>
+                    <LabelValueBox
+                      icon={<ThermostatIcon fontSize="small" />}
+                      label="Temperature"
+                      value={`${kelvinToCelsius(city.weatherInfo.temp)}°C`}
+                    />
+                    <LabelValueBox
+                      icon={<RemoveRedEyeOutlinedIcon fontSize="small" />}
+                      label="Feels Like"
+                      value={`${kelvinToCelsius(
+                        city.weatherInfo.feels_like
+                      )}°C`}
+                    />
+                  </Stack>
+                  <Stack direction="row" spacing={6} useFlexGap>
+                    <LabelValueBox
+                      icon={<OpacityOutlinedIcon fontSize="small" />}
+                      label="Humidity"
+                      value={`${city.weatherInfo.humidity}%`}
+                    />
+                    <LabelValueBox
+                      icon={<AirOutlinedIcon fontSize="small" />}
+                      label="Wind Speed"
+                      value={`${city.weatherInfo.windSpeed} m/s`}
+                    />
+                  </Stack>
+                </Stack>
+
+                <Box sx={styles.weatherConditionsBox}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={styles.weatherConditionsTitle}
+                  >
+                    Summary weather conditions
+                  </Typography>
+                  <Typography variant="body2">
+                    {city.weatherInfo.description}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Footer Actions */}
           <Stack
@@ -198,18 +205,28 @@ const CityDetailsCard: FC<ICityDetailsCard> = ({ city }) => {
           >
             <Button
               variant="outlined"
-              startIcon={<EditOutlinedIcon />}
-              onClick={onEditClick}
+              startIcon={<ArrowBackIosIcon />}
+              onClick={backButtonHandler}
             >
-              Edit City
+              Back
             </Button>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteOutlineOutlinedIcon />}
-            >
-              Delete City
-            </Button>
+            <Box sx={styles.footerStack.right}>
+              <Button
+                variant="outlined"
+                startIcon={<EditOutlinedIcon />}
+                onClick={onEditClick}
+              >
+                Edit City
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDeleteCity(city.id)}
+                startIcon={<DeleteOutlineOutlinedIcon />}
+              >
+                Delete City
+              </Button>
+            </Box>
           </Stack>
         </Box>
       </Paper>

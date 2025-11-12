@@ -7,4 +7,9 @@ export type AppState = {
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   searchCityResult: CityDBDetails[];
   setSearchCityResult: React.Dispatch<React.SetStateAction<CityDBDetails[]>>;
+  modalCloseHandler: () => void;
+  backButtonHandler: () => void;
+  onEditClick: () => void;
+  searchTriggered: boolean;
+  setSearchTriggered: React.Dispatch<React.SetStateAction<boolean>>;
 };

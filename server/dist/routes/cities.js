@@ -22,7 +22,6 @@ function registerCityRoutes(app) {
     });
     // Add a city to the database
     app.post("/cities", async (req, res) => {
-        console.log("REQUEST", req);
         try {
             const { name, state, country, tourist_rating, date_established, estimated_population, } = req.body;
             if (!name || !country) {

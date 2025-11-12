@@ -1,13 +1,17 @@
-import { Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Alert, Button, Container, Typography } from "@mui/material";
+
 import CityList from "../Components/CityList";
 import SearchBar from "../Components/SearchBar";
 import { useAppContext } from "../Context/AppStateContext";
 
+import { landingPageStyles as styles } from "../styles/styles";
+import { all } from "axios";
+
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { searchCityResult, searchTriggered } = useAppContext();
   // const [allCities, setAllCities] = useState([]);
-  const { searchCityResult } = useAppContext();
   // const allCities = mockCities;
 
   // const fetchApi = async () => {
@@ -26,8 +30,10 @@ const LandingPage = () => {
   // }, []);
 
   return (
-    <Container>
-      <Typography variant="h1">City Weather App</Typography>
+    <Container sx={styles.container}>
+      <Typography variant="h1" fontSize={"4rem"}>
+        City Weather App
+      </Typography>
       <SearchBar />
       <Button
         variant="contained"
@@ -37,6 +43,9 @@ const LandingPage = () => {
         Add New City
       </Button>
       <CityList allCities={searchCityResult} />
+      {searchCityResult.length === 0 && searchTriggered && (
+        <Alert severity="info">No cities match your search.</Alert>
+      )}
     </Container>
   );
 };

@@ -12,6 +12,7 @@ const getWeatherData = async (latitude, longitude) => {
         const response = await axios_1.default.get(url);
         const mainWData = response.data.main;
         const wData = response.data.weather[0];
+        const wind = response.data.wind;
         const responseSummary = {
             feels_like: mainWData.feels_like,
             humidity: mainWData.humidity,
@@ -19,6 +20,7 @@ const getWeatherData = async (latitude, longitude) => {
             temp: mainWData.temp,
             temp_max: mainWData.temp_max,
             temp_min: mainWData.temp_min,
+            windSpeed: wind.speed,
             description: wData.description,
         };
         return responseSummary;

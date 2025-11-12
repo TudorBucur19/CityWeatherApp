@@ -1,7 +1,10 @@
-import { Box, IconButton, Modal, Typography } from "@mui/material";
-import type { IGenericModal } from "../types/components";
 import type { FC } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+
+import type { IGenericModal } from "../types/components";
+
 import { genericModalStyles as styles } from "../styles/styles";
 
 const GenericModal: FC<IGenericModal> = ({
@@ -18,13 +21,6 @@ const GenericModal: FC<IGenericModal> = ({
       aria-describedby="modal-modal-description"
     >
       <Box sx={styles.modalContainer}>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={styles.closeButton}
-        >
-          <CloseIcon />
-        </IconButton>
         {title && (
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {title}

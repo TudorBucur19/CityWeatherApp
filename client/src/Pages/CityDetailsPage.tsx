@@ -7,7 +7,7 @@ const CityDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   console.log(id);
 
-  const city = searchCityResult.find((city) => city.id === id);
+  const city = searchCityResult.find((city) => city.id.toString() === id);
   if (!city) {
     return <div>City not found</div>;
   }

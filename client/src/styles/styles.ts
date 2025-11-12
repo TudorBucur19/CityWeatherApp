@@ -1,12 +1,3 @@
-// export const cityCardStyles = {
-//   cardItemContainer: {
-//     cursor: "pointer",
-//     transition: "transform 180ms, box-shadow 180ms",
-//     "&:hover": {
-//       transform: "translateY(-8px)",
-//     },
-//   },
-// };
 export const cityCardStyles = {
   card: { width: 300, borderRadius: 2 },
   cardContent: { cursor: "pointer" },
@@ -29,15 +20,21 @@ export const cityFormStyles = {
     flexDirection: "column",
     gap: "1rem",
   },
+  formActions: {
+    right: {
+      display: "flex",
+      gap: 2,
+    },
+  },
 };
 
 export const cityListStyles = {
   citiesContainer: {
     display: "grid",
     gridTemplateColumns: {
-      xs: "repeat(2, 1fr)",
-      md: "repeat(3, 1fr)",
-      lg: "repeat(4, 1fr)",
+      xs: "repeat(1, 1fr)",
+      md: "repeat(2, 1fr)",
+      lg: "repeat(3, 1fr)",
     },
     gap: { xs: "1.2rem", sm: "1.6rem", md: "2rem" },
     padding: "1rem",
@@ -45,11 +42,7 @@ export const cityListStyles = {
 };
 
 export const genericModalStyles = {
-  modalHeader: {
-    // position: "absolute",
-    // top: 42,
-    // right: 16
-  },
+  modalHeader: {},
   modalContainer: {
     position: "relative",
     maxWidth: 600,
@@ -73,6 +66,9 @@ export const labelValueBoxStyles = {
 };
 
 export const searchBarStyles = {
+  container: {
+    width: "100%",
+  },
   searchBtn: {
     cursor: "pointer",
   },
@@ -94,7 +90,7 @@ export const cityDetailsCardStyles = {
     pt: 2,
   },
   headerStack: { py: 1 },
-  headerIcon: { fontSize: 20 },
+  headerIcon: { fontSize: 32 },
   headerText: { color: "text.secondary" },
   divider: {},
   contentBox: {
@@ -112,7 +108,6 @@ export const cityDetailsCardStyles = {
     flexWrap: "wrap",
     rowGap: 2,
     columnGap: 6,
-    "& > *": { minWidth: { xs: "100%", sm: 240 } },
   },
   ratingCaption: { color: "text.secondary" },
   ratingText: { color: "text.secondary" },
@@ -125,5 +120,22 @@ export const cityDetailsCardStyles = {
     backgroundColor: "#ebf3ff",
   },
   weatherConditionsTitle: { color: "text.secondary", mb: 0.5 },
-  footerStack: { justifyContent: "flex-end", pt: 1 },
+  footerStack: {
+    justifyContent: "space-between",
+    pt: 1,
+    right: {
+      display: "flex",
+      gap: 2,
+    },
+  },
+};
+
+export const landingPageStyles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "1rem",
+    padding: "2rem",
+  },
 };
