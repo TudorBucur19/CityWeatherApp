@@ -1,9 +1,7 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { AppState } from "../types/general";
 import type { CityDBDetails } from "../types/cityTypes";
-
-const AppContext = createContext<AppState | undefined>(undefined);
+import { AppContext } from "./AppContext";
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,19 +9,19 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [searchCityResult, setSearchCityResult] = useState<CityDBDetails[]>([]);
   const [searchTriggered, setSearchTriggered] = useState(false);
 
-  const modalCloseHandler = () => {
+  const modalCloseHandler = useCallback(() => {
     setIsModalOpen(false);
     setIsEditMode(false);
-  };
+  }, []);
 
-  const backButtonHandler = () => {
+  const backButtonHandler = useCallback(() => {
     globalThis.history.back();
-  };
+  }, []);
 
-  const onEditClick = () => {
+  const onEditClick = useCallback(() => {
     setIsModalOpen(true);
     setIsEditMode(true);
-  };
+  }, []);
 
   const returnValues = useMemo(
     () => ({
@@ -39,7 +37,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       searchTriggered,
       setSearchTriggered,
     }),
-    [isModalOpen, isEditMode, searchCityResult, searchTriggered]
+    [
+      isModalOpen,
+      isEditMode,
+      searchCityResult,
+      searchTriggered,
+      backButtonHandler,
+      modalCloseHandler,
+      onEditClick,
+    ]
   );
 
   return (
