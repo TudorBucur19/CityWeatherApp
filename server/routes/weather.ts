@@ -5,8 +5,6 @@ export function registerWeatherRoutes(app: Express) {
   app.get("/weather", async (req: Request, res: Response) => {
     const { lat, lon, exclude } = req.query;
     const apiKey = process.env.OPENWEATHER_API_KEY;
-    console.log(apiKey);
-
     if (!lat || !lon) {
       return res
         .status(400)

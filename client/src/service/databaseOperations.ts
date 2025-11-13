@@ -15,7 +15,6 @@ export const addNewCityToDB = async (
   data: CityPayload,
   finallyAction: () => void
 ) => {
-  console.log("DATA FOR PAYLOAD", data);
   const payload = {
     name: data.name,
     state: data.state.trim() === "" ? "" : data.state,
@@ -24,8 +23,6 @@ export const addNewCityToDB = async (
     date_established: data.date_established || "",
     estimated_population: data.estimated_population,
   };
-
-  console.log("PAYLOAD", payload);
 
   try {
     const response = await fetch("http://localhost:8080/cities", {
@@ -36,11 +33,8 @@ export const addNewCityToDB = async (
     if (!response.ok) throw new Error("Failed to add city");
     const newCity = await response.json();
     console.log("CITY API RESPONSE", newCity);
-
-    // Optionally update city list or close modal here
   } catch (err) {
     console.error(err);
-    // Optionally show error to user
   } finally {
     finallyAction();
   }
@@ -66,10 +60,8 @@ export const editCityHandler = async (
     if (!response.ok) throw new Error("Failed to update city");
     const updatedCity = await response.json();
     console.log("CITY API RESPONSE", updatedCity);
-    // Optionally update city list or close modal here
   } catch (err) {
     console.error(err);
-    // Optionally show error to user
   } finally {
     finallyCallback();
   }
