@@ -2,6 +2,7 @@
 import { useEffect, type FC } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -21,6 +22,7 @@ import type { CityTextFormFields } from "../types/cityTypes";
 import { addNewCityToDB, editCityHandler } from "../service/databaseOperations";
 
 import { cityFormStyles as styles } from "../styles/styles";
+import { citySchema } from "../schemas/citySchema";
 
 const CityForm: FC<ICItyForm> = ({ city }) => {
   const {
@@ -36,9 +38,10 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
     handleSubmit,
     control,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     setValue,
   } = useForm({
+    resolver: zodResolver(citySchema),
     defaultValues: {
       name: city?.name || "",
       state: city?.state || "",
@@ -47,6 +50,9 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
       date_established: city?.date_established || "",
       estimated_population: city?.estimated_population || 0,
     },
+    mode: "onBlur",
+    criteriaMode: "all",
+    reValidateMode: "onBlur",
   });
 
   // Update form values when city changes (e.g., when opening modal)
@@ -102,6 +108,8 @@ const CityForm: FC<ICItyForm> = ({ city }) => {
                 ? { InputLabelProps: { shrink: true } }
                 : {})}
               sx={{ display: field.display ? "block" : "none" }}
+              error={!!errors[field.name]}
+              helperText={errors[field.name]?.message as string}
             />
           ))}
           <Stack
